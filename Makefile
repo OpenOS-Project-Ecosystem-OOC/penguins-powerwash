@@ -1,4 +1,4 @@
-# Makefile — Linux Powerwash
+# Makefile — Penguins Powerwash
 #
 # Targets:
 #   install    Install to /usr/local (default prefix)
@@ -16,13 +16,18 @@ MANDIR     := $(PREFIX)/share/man/man1
 STATEDIR   := /var/lib/powerwash
 LOGDIR     := /var/log
 
-.PHONY: install uninstall check clean
+# Integration plugin directories (other tools must be installed first)
+EGGS_PLUGIN_DIR      ?= $(PREFIX)/share/penguins-eggs/plugins
+RECOVERY_PLUGIN_DIR  ?= $(PREFIX)/share/penguins-powerwash/plugins/distro
+SHAREDIR             := $(PREFIX)/share/penguins-powerwash
+
+.PHONY: install uninstall install-integration uninstall-integration check clean
 
 install:
-	@echo "Installing Linux Powerwash to $(PREFIX)..."
+	@echo "Installing Penguins Powerwash to $(PREFIX)..."
 
 	# Binary
-	install -Dm755 bin/powerwash          $(BINDIR)/powerwash
+	install -Dm755 bin/penguins-powerwash          $(BINDIR)/powerwash
 
 	# Libraries
 	install -Dm644 lib/common.sh          $(LIBDIR)/lib/common.sh
@@ -76,7 +81,7 @@ install:
 	@echo "  sudo systemctl enable --now powerwash-rebind.service"
 
 uninstall:
-	@echo "Removing Linux Powerwash..."
+	@echo "Removing Penguins Powerwash..."
 	rm -f  $(BINDIR)/powerwash
 	rm -rf $(LIBDIR)
 	rm -f  $(SYSTEMDDIR)/powerwash-rebind.service
@@ -85,11 +90,46 @@ uninstall:
 	@echo "  $(CONFDIR)  $(STATEDIR)"
 	@echo "Remove manually if desired."
 
+# ── Integration scripts ───────────────────────────────────────────────────────
+# Installs plugin scripts so penguins-eggs and penguins-recovery can discover
+# penguins-powerwash automatically. Run after both tools are installed.
+
+install-integration:
+	@echo "Installing penguins-powerwash integration scripts..."
+
+	# Ship integration sources to a stable share path
+	install -Dm755 integration/eggs-plugin/powerwash-hook.sh \
+	               $(SHAREDIR)/integration/eggs-plugin/powerwash-hook.sh
+	install -Dm644 integration/eggs-plugin/README.md \
+	               $(SHAREDIR)/integration/eggs-plugin/README.md
+	install -Dm755 integration/recovery-plugin/powerwash-plugin.sh \
+	               $(SHAREDIR)/integration/recovery-plugin/powerwash-plugin.sh
+	install -Dm644 integration/recovery-plugin/README.md \
+	               $(SHAREDIR)/integration/recovery-plugin/README.md
+
+	# Create plugin directories and symlink into them
+	install -dm755 $(EGGS_PLUGIN_DIR)
+	ln -sf $(SHAREDIR)/integration/eggs-plugin/powerwash-hook.sh \
+	       $(EGGS_PLUGIN_DIR)/powerwash-hook.sh
+	@echo "  Linked eggs plugin → $(EGGS_PLUGIN_DIR)/powerwash-hook.sh"
+
+	install -dm755 $(RECOVERY_PLUGIN_DIR)
+	ln -sf $(SHAREDIR)/integration/recovery-plugin/powerwash-plugin.sh \
+	       $(RECOVERY_PLUGIN_DIR)/powerwash-self-plugin.sh
+	@echo "  Linked recovery plugin → $(RECOVERY_PLUGIN_DIR)/powerwash-self-plugin.sh"
+
+	@echo "Integration install complete."
+
+uninstall-integration:
+	rm -f  $(EGGS_PLUGIN_DIR)/powerwash-hook.sh
+	rm -f  $(RECOVERY_PLUGIN_DIR)/powerwash-self-plugin.sh
+	rm -rf $(SHAREDIR)/integration
+
 check:
 	@echo "Running shellcheck..."
 	@if command -v shellcheck >/dev/null 2>&1; then \
 	    shellcheck -x \
-	        bin/powerwash \
+	        bin/penguins-powerwash \
 	        lib/*.sh \
 	        modes/*.sh \
 	        plugins/**/*.sh \
