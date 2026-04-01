@@ -17,25 +17,25 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: "./bin"
-          severity: warning
+          severity: error
 
       - name: ShellCheck — lib
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: "./lib"
-          severity: warning
+          severity: error
 
       - name: ShellCheck — modes
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: "./modes"
-          severity: warning
+          severity: error
 
       - name: ShellCheck — integration
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: "./integration"
-          severity: warning
+          severity: error
 
   test:
     name: Functional tests
