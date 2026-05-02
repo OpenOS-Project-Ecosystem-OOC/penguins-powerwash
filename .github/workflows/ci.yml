@@ -45,6 +45,7 @@ jobs:
 
       - name: Install shellcheck + bats
         run: |
+          sudo sed -i "s|mirror+file:/etc/apt/apt-mirrors.txt|http://archive.ubuntu.com/ubuntu|g" /etc/apt/sources.list.d/*.list 2>/dev/null || true
           sudo apt-get update -qq
           sudo apt-get install -y shellcheck bats
 
