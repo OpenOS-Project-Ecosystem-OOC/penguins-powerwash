@@ -103,3 +103,10 @@ GPL-3.0. See [LICENSE](LICENSE).
 ## Upstream
 
 Forked from [openos-project/linux-powerwash](https://gitlab.com/openos-project/linux-distro_feature-modules_deving/linux-powerwash).
+
+## Origins
+
+penguins-powerwash is forked from and extends:
+- [Interested-Deving-1896/linux-powerwash](https://github.com/Interested-Deving-1896/linux-powerwash) — the distro-agnostic factory reset tool this project rebrands
+- [Interested-Deving-1896/penguins-eggs](https://github.com/Interested-Deving-1896/penguins-eggs) — penguins-eggs integration (pre/post-reset ISO snapshots)
+- [Interested-Deving-1896/penguins-recovery](https://github.com/Interested-Deving-1896/penguins-recovery) — recovery integration (snapshot + re-layer after reset)
