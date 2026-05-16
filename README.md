@@ -1,75 +1,29 @@
+[update-readmes]   Mode: rewrite — migrating to template structure...
 # penguins-powerwash
 
-A distro-agnostic, filesystem-agnostic factory reset tool for Linux.
+[![Built with Ona](https://ona.com/build-with-ona.svg)](https://app.ona.com/#https://github.com/Interested-Deving-1896/penguins-powerwash)
 
-Forked from [linux-powerwash](https://gitlab.com/openos-project/linux-distro_feature-modules_deving/linux-powerwash)
-and rebranded as part of the **penguins ecosystem** alongside
-[penguins-eggs](https://gitlab.com/openos-project/penguins-eggs_deving/penguins-eggs) and
-[penguins-recovery](https://gitlab.com/openos-project/penguins-eggs_deving/penguins-recovery).
+<!-- AI:start:what-it-does -->
+_Description pending._
+<!-- AI:end:what-it-does -->
 
----
+## Architecture
 
-## penguins-eggs & penguins-recovery integration
+<!-- AI:start:architecture -->
+_Architecture documentation pending._
+<!-- AI:end:architecture -->
 
-penguins-powerwash has **bidirectional** integration with the penguins ecosystem.
+## Install
 
-### penguins-powerwash → penguins-eggs / penguins-recovery
-
-| Event | Action |
-|---|---|
-| Pre-reset (any mode) | Calls `eggs produce --naked` to snapshot the live system state before wiping |
-| Pre-reset (any mode) | Calls `penguins-recovery snapshot create pre-powerwash-<mode>` if recovery is present |
-| Post-reset (hard/sysprep) | Calls `penguins-recovery adapter.sh` to re-layer recovery tools onto the reset system |
-| Post-backup | Notifies eggs so the backup path is recorded in the next ISO manifest |
-
-Configure in `/etc/penguins-powerwash/eggs-hooks.conf`:
+<!-- Add installation instructions here. This section is yours — the AI will not modify it. -->
 
 ```bash
-EGGS_BIN="/usr/bin/eggs"              # set to "" to disable
-RECOVERY_BIN="/usr/bin/penguins-recovery"
-PRE_RESET_SNAPSHOT=1                  # create recovery snapshot before reset
-PRE_RESET_EGGS_PRODUCE=0              # set 1 to produce a naked ISO before reset
-POST_HARD_RESET_ADAPT=1               # re-layer recovery tools after hard reset
-```
-
-### penguins-eggs / penguins-recovery → penguins-powerwash
-
-penguins-powerwash registers itself as a plugin for penguins-recovery:
-
-**recovery plugin** (`integration/recovery-plugin/powerwash-plugin.sh`):
-- `pw_plugin_pre_reset()` — no-op (powerwash IS the reset tool)
-- `pw_plugin_post_reset()` — re-runs `penguins-powerwash info` to confirm clean state
-
-penguins-powerwash also ships an **eggs plugin** (`integration/eggs-plugin/powerwash-hook.sh`):
-- Called by `eggs produce` to embed the powerwash binary and config into the ISO
-- Adds a GRUB menu entry for "Factory Reset" that boots into powerwash hard mode
-
----
-
-## Features
-
-| Capability | Details |
-|---|---|
-| **Distro support** | Debian, Ubuntu, Fedora, RHEL, Arch, openSUSE, Gentoo, Void — auto-detected |
-| **Filesystem support** | ext4, xfs, btrfs (native snapshots), ZFS (native snapshots), overlayfs |
-| **Reset modes** | Soft, Medium, Hard, Sysprep, Hardware |
-| **Backup** | Pre-reset backup with optional GPG symmetric encryption |
-| **Dry-run** | `--dry-run` prints every action without executing it |
-| **Plugin system** | Drop `.sh` files into `plugins/{distro,filesystem,hardware}/` |
-
----
-
-## Installation
-
-```bash
-git clone https://gitlab.com/openos-project/penguins-eggs_deving/penguins-powerwash
+git clone https://github.com/Interested-Deving-1896/penguins-powerwash.git
 cd penguins-powerwash
-sudo make install
 ```
-
----
 
 ## Usage
+
 
 ```bash
 sudo penguins-powerwash soft
@@ -85,28 +39,50 @@ sudo penguins-powerwash menu
 
 ---
 
-## Reset mode comparison
+## Configuration
 
-| Mode | Dotfiles | Packages | Home data | System config | Machine ID |
-|---|---|---|---|---|---|
-| `soft` | ✓ reset | unchanged | unchanged | unchanged | unchanged |
-| `medium` | ✓ reset | ✓ purged | unchanged | ✓ sources reset | unchanged |
-| `hard` | ✓ reset | ✓ purged | ✓ wiped | ✓ reset | unchanged |
-| `sysprep` | unchanged | unchanged | unchanged | ✓ reset | ✓ cleared |
+<!-- Document configuration options here. This section is yours — the AI will not modify it. -->
 
----
+## CI
 
-## License
+<!-- AI:start:ci -->
+_CI documentation pending._
+<!-- AI:end:ci -->
 
-GPL-3.0. See [LICENSE](LICENSE).
+## Mirror chain
 
-## Upstream
+<!-- AI:start:mirror-chain -->
+This repo is maintained in [`Interested-Deving-1896/penguins-powerwash`](https://github.com/Interested-Deving-1896/penguins-powerwash) and mirrored through:
 
-Forked from [openos-project/linux-powerwash](https://gitlab.com/openos-project/linux-distro_feature-modules_deving/linux-powerwash).
+```
+Interested-Deving-1896/penguins-powerwash  ──►  OpenOS-Project-OSP/penguins-powerwash  ──►  OpenOS-Project-Ecosystem-OOC/penguins-powerwash
+```
+
+Changes flow downstream automatically via the hourly mirror chain in
+[`fork-sync-all`](https://github.com/Interested-Deving-1896/fork-sync-all).
+Direct commits to OSP or OOC are detected and opened as PRs back to `Interested-Deving-1896`.
+<!-- AI:end:mirror-chain -->
+
+## Contributors
+
+<!-- AI:start:contributors -->
+_Contributors pending._
+<!-- AI:end:contributors -->
 
 ## Origins
 
-penguins-powerwash is forked from and extends:
-- [Interested-Deving-1896/linux-powerwash](https://github.com/Interested-Deving-1896/linux-powerwash) — the distro-agnostic factory reset tool this project rebrands
-- [Interested-Deving-1896/penguins-eggs](https://github.com/Interested-Deving-1896/penguins-eggs) — penguins-eggs integration (pre/post-reset ISO snapshots)
-- [Interested-Deving-1896/penguins-recovery](https://github.com/Interested-Deving-1896/penguins-recovery) — recovery integration (snapshot + re-layer after reset)
+<!-- AI:start:origins -->
+_No dependency graph found. Run `generate-dep-graph.yml` to generate `dep-graph/origins.md`._
+<!-- AI:end:origins -->
+
+## Resources
+
+<!-- AI:start:resources -->
+_No additional resource files found._
+<!-- AI:end:resources -->
+
+## License
+
+<!-- AI:start:license -->
+<!-- License not detected — add a LICENSE file to this repo. -->
+<!-- AI:end:license -->
